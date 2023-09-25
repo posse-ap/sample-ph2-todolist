@@ -80,7 +80,7 @@ $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="index.php?toggle=1&id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 <?= $todo['completed'] ? 'bg-blue-500 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700' ?> text-white font-bold rounded">
               <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
             </a>
-            <a href="index.php?edit=1&id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
+            <a href="edit/index.php?id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
             <a href="index.php?delete=1&id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">Delete</a>
           </li>
         <?php endforeach; ?>
