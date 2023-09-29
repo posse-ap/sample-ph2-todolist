@@ -5,24 +5,23 @@ $editId = null;
 $editText = '';
 
 // 新しいToDoを追加、または既存のToDoを更新
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $text = trim($_POST['todo-text']);
-  if ($text) {
-    if (isset($_POST['edit-id'])) {
-      $stmt = $dbh->prepare("UPDATE todos SET text = :text WHERE id = :id");
-      $stmt->execute([':text' => $text, ':id' => $_POST['edit-id']]);
-    } else {
-      $stmt = $dbh->prepare("INSERT INTO todos (text) VALUES (:text)");
-      $stmt->execute([':text' => $text]);
-    }
-    header('Location: index.php');
-    exit;
+$text = isset($_POST['todo-text']) ? trim($_POST['todo-text']) : '';
+
+if (!empty($text)) {
+  if (isset($_POST['edit-id'])) {
+    $stmt = $dbh->prepare("UPDATE todos SET text = :text WHERE id = :id");
+    $stmt->execute([':text' => $text, ':id' => $_POST['edit-id']]);
+  } else {
+    $stmt = $dbh->prepare("INSERT INTO todos (text) VALUES (:text)");
+    $stmt->execute([':text' => $text]);
   }
+  header('Location: index.php');
+  exit;
 }
 
 // ToDoの状態を変更 (completed)
-if (isset($_GET['toggle']) && isset($_GET['id'])) {
-  $id = (int)$_GET['id'];
+if (isset($_POST['toggle-id'])) {
+  $id = (int)$_POST['toggle-id'];
   $stmt = $dbh->prepare("UPDATE todos SET completed = NOT completed WHERE id = :id");
   $stmt->execute([':id' => $id]);
   header('Location: index.php');
@@ -60,9 +59,12 @@ $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($todos as $todo) : ?>
           <li class="flex items-center">
             <?= htmlspecialchars($todo['text']) ?>
-            <a href="index.php?toggle=1&id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 <?= $todo['completed'] ? 'bg-blue-500 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700' ?> text-white font-bold rounded">
-              <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
-            </a>
+            <form method="post" class="inline">
+              <input type="hidden" name="toggle-id" value="<?= $todo['id'] ?>">
+              <button type="submit" class="ml-2 px-3 py-1 <?= $todo['completed'] ? 'bg-blue-500 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700' ?> text-white font-bold rounded">
+                <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
+              </button>
+            </form>
             <a href="edit/index.php?id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
             <a href="delete/index.php?id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">Delete</a>
           </li>
