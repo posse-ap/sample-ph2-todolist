@@ -29,15 +29,6 @@ if (isset($_GET['toggle']) && isset($_GET['id'])) {
   exit;
 }
 
-// ToDoを削除
-if (isset($_GET['delete']) && isset($_GET['id'])) {
-  $id = (int)$_GET['id'];
-  $stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
-  $stmt->execute([':id' => $id]);
-  header('Location: index.php');
-  exit;
-}
-
 // すべてのToDoを取得
 $stmt = $dbh->query("SELECT * FROM todos");
 $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -73,7 +64,7 @@ $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
             </a>
             <a href="edit/index.php?id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
-            <a href="index.php?delete=1&id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">Delete</a>
+            <a href="delete/index.php?id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">Delete</a>
           </li>
         <?php endforeach; ?>
       </ul>
