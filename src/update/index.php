@@ -1,15 +1,13 @@
 <?php
 require '../dbconnect.php';
 
-$toggleId = $_POST['toggle-id'] ?? null;
-
-if (!$toggleId) {
+if (!$_POST['toggle-id']) {
   header('Location: ../index.php');
   exit;
 }
 
 $stmt = $dbh->prepare("UPDATE todos SET completed = NOT completed WHERE id = :id");
-$stmt->execute([':id' => $toggleId]);
+$stmt->execute([':id' => $_POST['toggle-id']]);
 
 header('Location: ../index.php');
 exit;

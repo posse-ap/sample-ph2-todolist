@@ -1,15 +1,13 @@
 <?php
 require '../dbconnect.php';
 
-$deleteId = $_GET['id'] ?? null;
-
-if (!$deleteId) {
+if (!$_GET['id']) {
   header('Location: ../index.php');
   exit;
 }
 
 $stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
-$stmt->execute([':id' => $deleteId]);
+$stmt->execute([':id' => $_GET['id']]);
 
 header('Location: ../index.php');
 exit;
