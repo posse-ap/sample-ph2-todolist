@@ -20,14 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// ToDoを編集のためのデータを取得
-if (isset($_GET['edit']) && isset($_GET['id'])) {
-  $editId = (int)$_GET['id'];
-  $stmt = $dbh->prepare("SELECT text FROM todos WHERE id = :id");
-  $stmt->execute([':id' => $editId]);
-  $editText = $stmt->fetchColumn();
-}
-
 // ToDoの状態を変更 (completed)
 if (isset($_GET['toggle']) && isset($_GET['id'])) {
   $id = (int)$_GET['id'];
