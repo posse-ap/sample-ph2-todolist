@@ -19,15 +19,6 @@ if (!empty($text)) {
   exit;
 }
 
-// ToDoの状態を変更 (completed)
-if (isset($_POST['toggle-id'])) {
-  $id = (int)$_POST['toggle-id'];
-  $stmt = $dbh->prepare("UPDATE todos SET completed = NOT completed WHERE id = :id");
-  $stmt->execute([':id' => $id]);
-  header('Location: index.php');
-  exit;
-}
-
 // すべてのToDoを取得
 $stmt = $dbh->query("SELECT * FROM todos");
 $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -59,7 +50,7 @@ $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($todos as $todo) : ?>
           <li class="flex items-center">
             <?= htmlspecialchars($todo['text']) ?>
-            <form method="post" class="inline">
+            <form method="post" action="./update/index.php" class="inline">
               <input type="hidden" name="toggle-id" value="<?= $todo['id'] ?>">
               <button type="submit" class="ml-2 px-3 py-1 <?= $todo['completed'] ? 'bg-blue-500 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700' ?> text-white font-bold rounded">
                 <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
