@@ -8,8 +8,14 @@ if (!$deleteId) {
   exit;
 }
 
-$stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
+  $stmt->execute([':id' => $deleteId]);
+  header('Location: ../index.php');
+  exit;
+}
+
+$stmt = $dbh->prepare("SELECT text FROM todos WHERE id = :id");
 $stmt->execute([':id' => $deleteId]);
-header('Location: ../index.php');
-exit;
+$deleteText = $stmt->fetchColumn() ?? '';
 ?>
