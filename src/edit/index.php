@@ -15,7 +15,9 @@ if (!isset($_SESSION['id'])) {
     $text = trim($_POST['text']);
     if ($text) {
       $stmt = $dbh->prepare("UPDATE todos SET text = :text WHERE id = :id");
-      $stmt->execute([':text' => $text, ':id' => $_GET['id']]);
+      $stmt->bindValue(':text', $text);
+      $stmt->bindValue(':id', $_GET['id']);
+      $stmt->execute();
       header('Location: ../index.php');
       exit;
     }
