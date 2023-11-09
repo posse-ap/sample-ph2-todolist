@@ -11,7 +11,9 @@ CREATE TABLE todos (
   completed BOOLEAN DEFAULT FALSE
 ) CHARSET=utf8;
 
-INSERT INTO todos (text) VALUES ("テスト1");
+INSERT INTO todos (text) VALUES ("todo1");
+INSERT INTO todos (text) VALUES ("todo2");
+INSERT INTO todos (text) VALUES ("todo3");
 
 -- usersテーブル
 DROP TABLE IF EXISTS users;

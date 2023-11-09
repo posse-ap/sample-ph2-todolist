@@ -1,16 +1,6 @@
 <?php
 require 'dbconnect.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (isset($_POST['todo-text'])) {
-    $stmt = $dbh->prepare('INSERT INTO todos (text) VALUES (:text)');
-    $stmt->bindValue(':text', $_POST['todo-text']);
-    $stmt->execute();
-  }
-  header('Location: index.php');
-  exit;
-}
-
 $stmt = $dbh->query("SELECT * FROM todos");
 $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -28,7 +18,7 @@ $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
-      <form method="post" class="mb-5 text-center">
+      <form method="post" action="./create/index.php" class="mb-5 text-center">
         <input name="todo-text" class="border p-2 w-full max-w-lg" type="text" placeholder="新しいToDoを入力してください" />
         <button type="submit" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center">
           追加
