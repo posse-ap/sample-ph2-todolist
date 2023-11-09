@@ -1,14 +1,19 @@
 <?php
 require '../dbconnect.php';
 
-if (!$_GET['id']) {
+session_start();
+
+if (!isset($_SESSION['id'])) {
+  header('Location: /auth/login.php');
+} else {
+  if (!$_GET['id']) {
+    header('Location: ../index.php');
+    exit;
+  }
+  
+  $stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
+  $stmt->execute([':id' => $_GET['id']]);
+  
   header('Location: ../index.php');
   exit;
 }
-
-$stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
-$stmt->execute([':id' => $_GET['id']]);
-
-header('Location: ../index.php');
-exit;
-?>

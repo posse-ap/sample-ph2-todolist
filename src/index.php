@@ -1,8 +1,16 @@
 <?php
 require 'dbconnect.php';
 
-$stmt = $dbh->query("SELECT * FROM todos");
-$todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+session_start();
+
+if (!isset($_SESSION['id'])) {
+  header('Location: /auth/login.php');
+} else {
+  $userId = $_SESSION['id']; 
+  $todos = $dbh->prepare("SELECT * FROM todos WHERE user_id = :user_id");
+  $todos->bindValue(':user_id', $userId);
+  $todos->execute();
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,6 +24,7 @@ $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
+  <?php include(dirname(__FILE__) . '/components/header.php'); ?>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
       <form method="post" action="./create/index.php" class="mb-5 text-center">
