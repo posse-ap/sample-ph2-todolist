@@ -34,14 +34,5 @@ services:
     volumes: # mysqlのテーブルやらなんやらを保存する
       - mysql-data:/var/lib/mysql
       - ./docker/mysql:/docker-entrypoint-initdb.d
-  # PHPMyAdminサーバー
-  phpmyadmin: # デフォルトのままで不都合ないのでDockerHubにあるイメージをそのまま使う
-    image: phpmyadmin/phpmyadmin:latest
-    environment:
-      PMA_HOST: 'db' # ホストはデータベースサーバーのサービス名(26行目)
-      PMA_USER: 'root' # デフォルトでログインしているユーザー(今回はルートユーザー)
-      PMA_PASSWORD: 'root' # 上記ユーザーのパスワード(今回はルートユーザーのパスワード)
-    ports: # ポートの設定(後で.envでする)
-    - ${PMA_PORT}:80
 volumes:
   mysql-data:
