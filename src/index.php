@@ -44,7 +44,12 @@ if (!isset($_SESSION['id'])) {
               </button>
             </form>
             <a href="edit/index.php?id=<?= $todo['id'] ?>&text=<?= $todo['text'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
-            <a href="delete/index.php?id=<?= $todo['id'] ?>" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">Delete</a>
+            <form method="post" action="./delete/index.php" class="inline">
+              <input type="hidden" name="delete-id" value="<?= $todo['id'] ?>">
+              <button type="submit" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
+                Delete
+              </button>
+            </form>
           </li>
         <?php endforeach; ?>
       </ul>

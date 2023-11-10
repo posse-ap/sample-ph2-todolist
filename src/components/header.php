@@ -16,4 +16,8 @@ header {
   justify-content: space-between;
   padding: 15px 24px;
 }
+
+.submit {
+  cursor: pointer;
+}
 </style>
