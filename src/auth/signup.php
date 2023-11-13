@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-  <?php include(dirname(__FILE__) . '/../components/header-login.php'); ?>
+  <?php include(dirname(__FILE__) . '/../components/header.php'); ?>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
       <h1 class="mb-4">新規登録</h1>

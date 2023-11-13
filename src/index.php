@@ -6,7 +6,7 @@ session_start();
 if (!isset($_SESSION['id'])) {
   header('Location: /auth/login.php');
 } else {
-  $userId = $_SESSION['id']; 
+  $userId = $_SESSION['id'];
   $todos = $dbh->prepare("SELECT * FROM todos WHERE user_id = :user_id");
   $todos->bindValue(':user_id', $userId);
   $todos->execute();
@@ -36,7 +36,7 @@ if (!isset($_SESSION['id'])) {
       <ul class="space-y-4 text-center">
         <?php foreach ($todos as $todo) : ?>
           <li class="flex items-center justify-center">
-            <?= htmlspecialchars($todo['text']) ?>
+            <?= $todo['text'] ?>
             <form method="post" action="./update/index.php" class="inline">
               <input type="hidden" name="toggle-id" value="<?= $todo['id'] ?>">
               <button type="submit" class="ml-2 px-3 py-1 <?= $todo['completed'] ? 'bg-blue-500 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700' ?> text-white font-bold rounded">
@@ -44,17 +44,38 @@ if (!isset($_SESSION['id'])) {
               </button>
             </form>
             <a href="edit/index.php?id=<?= $todo['id'] ?>&text=<?= $todo['text'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
-            <form method="post" action="./delete/index.php" class="inline">
+            <!-- <form method="post" action="./delete/index.php" class="inline">
               <input type="hidden" name="delete-id" value="<?= $todo['id'] ?>">
               <button type="submit" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
                 Delete
               </button>
-            </form>
+            </form> -->
+            <button type="button" onclick="deleteTodo(<?= $todo['id'] ?>, this.parentNode)" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
+              Delete
+            </button>
           </li>
         <?php endforeach; ?>
       </ul>
     </div>
   </div>
 </body>
+
+<script>
+  async function deleteTodo(id, element) {
+    try {
+      const response = await fetch('./delete/index.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `delete-id=${id}`
+      });
+      console.log(response)
+      element.remove();
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  }
+</script>
 
 </html>
