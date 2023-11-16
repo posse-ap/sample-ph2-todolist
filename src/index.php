@@ -70,6 +70,11 @@ if (!isset($_SESSION['id'])) {
         },
         body: `delete-id=${id}`
       });
+
+      if (!response.ok) {
+        throw new Error('サーバーからエラーのレスポンスがありました！');
+      }
+
       console.log(response)
       element.remove();
     } catch (error) {

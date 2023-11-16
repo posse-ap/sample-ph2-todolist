@@ -15,17 +15,10 @@ if (!isset($_POST['delete-id'])) {
 
 try {
   $stmt = $dbh->prepare("DELETE FROM todos WHERE id = :id");
-  $stmt->bindValue(':id', $_POST['delete-id'], PDO::PARAM_INT);
-
-  error_log("エラーメッセージをここに記述");
-
-  if (!$stmt->execute()) {
-    // データベース操作に失敗した場合、500エラーを返す
-    header('HTTP/1.1 500 Internal Server Error');
-    exit;
-  }
-} catch (PDOException $e) {
-  // 例外が発生した場合、500エラーを返す
+  $stmt->bindValue(':id', $_POST['delete-id'], PDO::PARAM_INT) // ここで意図的なエラー
+  $stmt->execute();
+} catch (Error $e) {
+  error_log($e->getMessage());
   header('HTTP/1.1 500 Internal Server Error');
   exit;
 }
