@@ -72,10 +72,11 @@ if (!isset($_SESSION['id'])) {
       });
 
       if (!response.ok) {
-        throw new Error('サーバーからエラーのレスポンスがありました！');
+        const errorText = await response.text();
+        throw new Error('Error from server: ' + errorText);
       }
 
-      console.log(response)
+      console.log('Todo deleted successfully');
       element.remove();
     } catch (error) {
       alert('Error: ' + error.message);
