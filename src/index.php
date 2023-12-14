@@ -27,12 +27,18 @@ if (!isset($_SESSION['id'])) {
   <?php include(dirname(__FILE__) . '/components/header.php'); ?>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
-      <form method="post" action="./create/index.php" class="mb-5 text-center">
+      <!-- <form method="post" action="./create/index.php" class="mb-5 text-center">
         <input name="todo-text" class="border p-2 w-full max-w-lg" type="text" placeholder="新しいToDoを入力してください" />
         <button type="submit" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center">
           追加
         </button>
-      </form>
+      </form> -->
+      <div class="mb-5 text-center">
+        <input id="todo-text" name="todo-text" class="border p-2 w-full max-w-lg" type="text" placeholder="新しいToDoを入力してください" />
+        <button type="button" onclick="createTodo()" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center">
+          追加
+        </button>
+      </div>
       <ul class="space-y-4 text-center">
         <?php foreach ($todos as $todo) : ?>
           <li class="flex items-center justify-center">
@@ -44,12 +50,6 @@ if (!isset($_SESSION['id'])) {
               </button>
             </form>
             <a href="edit/index.php?id=<?= $todo['id'] ?>&text=<?= $todo['text'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
-            <!-- <form method="post" action="./delete/index.php" class="inline">
-              <input type="hidden" name="delete-id" value="<?= $todo['id'] ?>">
-              <button type="submit" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
-                Delete
-              </button>
-            </form> -->
             <button type="button" onclick="deleteTodo(<?= $todo['id'] ?>, this.parentNode)" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
               Delete
             </button>
@@ -61,6 +61,28 @@ if (!isset($_SESSION['id'])) {
 </body>
 
 <script>
+  async function createTodo() {
+    var todoText = document.getElementById('todo-text').value;
+
+    try {
+      const response = await fetch('./create/index.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `todo-text=${todoText}`
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error('Error from server: ' + errorText);
+      }
+
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  }
+
   async function deleteTodo(id, element) {
     try {
       const response = await fetch('./delete/index.php', {
@@ -76,7 +98,6 @@ if (!isset($_SESSION['id'])) {
         throw new Error('Error from server: ' + errorText);
       }
 
-      console.log('Todo deleted successfully');
       element.remove();
     } catch (error) {
       alert('Error: ' + error.message);
