@@ -95,7 +95,7 @@ if (!isset($_SESSION['id'])) {
         throw new Error('Error from server: ' + errorText);
       }
 
-      const data = await response.text();
+      const data = await response.json();
       addTodoElement(todoText, data.id);
       todoInput.value = '';
 

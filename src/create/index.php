@@ -13,6 +13,9 @@ if (!isset($_SESSION['id'])) {
       $stmt->bindValue(':user_id', $_SESSION['id']);
       $stmt->bindValue(':text', $_POST['todo-text']);
       $stmt->execute();
+
+      $newlyInsertedId = $dbh->lastInsertId();
+      echo json_encode(['id' => $newlyInsertedId]);
     } catch (PDOException $e) {
       header('HTTP/1.1 500 Internal Server Error');
       echo 'Database error: ' . $e->getMessage();
