@@ -12,7 +12,6 @@ if (!isset($_SESSION['id'])) {
   $todos->execute();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +38,7 @@ if (!isset($_SESSION['id'])) {
           追加
         </button>
       </div>
-      <ul class="space-y-4 text-center">
+      <ul class="space-y-4 text-center js-todo-list">
         <?php foreach ($todos as $todo) : ?>
           <li class="flex items-center justify-center">
             <?= $todo['text'] ?>
@@ -58,13 +57,30 @@ if (!isset($_SESSION['id'])) {
       </ul>
     </div>
   </div>
+  <template>
+      <li class="flex items-center justify-center">
+        <span class="js-todo-text"></span>
+        <form method="post" action="./update/index.php" class="inline">
+          <input type="hidden" name="toggle-id" value="">
+          <button type="submit" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+            Complete
+          </button>
+        </form>
+        <a href="" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded js-edit-link">Edit</a>
+        <button type="button" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded js-delete-todo" data-id="">
+          Delete
+        </button>
+      </li>
+  </template>
 </body>
 
 <script>
   async function createTodo() {
-    var todoText = document.getElementById('todo-text').value;
-
-    try {
+    const todoText = document.getElementById('todo-text').value;
+    addTodoElement(todoText);
+    console.log(todoText);
+    /**
+     * try {
       const response = await fetch('./create/index.php', {
         method: 'POST',
         headers: {
@@ -81,6 +97,7 @@ if (!isset($_SESSION['id'])) {
     } catch (error) {
       alert('Error: ' + error.message);
     }
+     */
   }
 
   async function deleteTodo(id, element) {
@@ -102,6 +119,30 @@ if (!isset($_SESSION['id'])) {
     } catch (error) {
       alert('Error: ' + error.message);
     }
+  }
+
+  // idはaddTodoElementを実行するときに渡す 渡すイメージはレスポンスからidを取得して渡す
+  // const data = response.json() でレスポンスをjsonに変換してからidを取得する
+  // data.id でidを取得できるので、addTodoElement(todoText, data.id) とする
+  const addTodoElement = (text, id = 0) =>  {
+    const template = document.querySelector('template').content.cloneNode(true);
+    template.querySelector('.js-todo-text').textContent = text;
+
+    // 編集用のリンクを設定
+    template.querySelector('.js-edit-link').href =`edit/index.php?id=${id}&text=${text}`;
+
+    // 削除ボタンの設定
+    const deleteButton = template.querySelector('.js-delete-todo');
+    deleteButton.setAttribute('data-id', id);
+    deleteButton.addEventListener('click', () => {
+      deleteTodo(
+        id,
+        deleteButton.parentNode
+      );
+    });
+
+    // 元のリストに追加
+    document.querySelector('.js-todo-list').appendChild(template);
   }
 </script>
 
