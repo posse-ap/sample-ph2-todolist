@@ -13,6 +13,7 @@ $todos = $dbh->prepare("SELECT * FROM todos WHERE user_id = :user_id");
 $todos->bindValue(':user_id', $userId);
 $todos->execute();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
