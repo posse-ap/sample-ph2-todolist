@@ -1,9 +1,10 @@
 <?php
-require dirname(__FILE__) . '/../dbconnect.php';
+require __DIR__ . '/../dbconnect.php';
 
 session_start();
 
 if (!isset($_SESSION['id'])) {
+  // dirname を使ってlocation を指定したい
   header('Location: /auth/login.php');
   exit;
 }

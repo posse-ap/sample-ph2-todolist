@@ -1,5 +1,5 @@
 <?php
-require dirname(__FILE__) . '/../dbconnect.php';
+require __DIR__ . '/../dbconnect.php';
 
 session_start();
 
