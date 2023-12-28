@@ -1,5 +1,5 @@
 <?php
-require '../dbconnect.php';
+require dirname(__FILE__) . '/../dbconnect.php';
 
 session_start();
 
@@ -13,9 +13,19 @@ if (!$_POST['toggle-id']) {
   exit;
 }
 
-$stmt = $dbh->prepare("UPDATE todos SET completed = NOT completed WHERE id = :id");
-$stmt->bindValue(':id', $_POST['toggle-id']);
-$stmt->execute();
+try {
+  $stmt = $dbh->prepare("UPDATE todos SET completed = NOT completed WHERE id = :id");
+  $stmt->bindValue(':id', $_POST['toggle-id']);
+  $stmt->execute();
 
-header('Location: ../index.php');
-exit;
+  $stmt = $dbh->prepare("SELECT completed FROM todos WHERE id = :id");
+  $stmt->bindValue(':id', $_POST['toggle-id']);
+  $stmt->execute();
+  $result = $stmt->fetch();
+
+  echo json_encode(['completed' => $result['completed']]);
+} catch (PDOException $e) {
+  header('HTTP/1.1 500 Internal Server Error');
+  echo 'Database error: ' . $e->getMessage();
+  exit;
+}

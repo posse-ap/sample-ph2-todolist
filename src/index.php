@@ -1,5 +1,5 @@
 <?php
-require 'dbconnect.php';
+require dirname(__FILE__) . '/dbconnect.php';
 
 session_start();
 
@@ -36,14 +36,11 @@ $todos->execute();
       </div>
       <ul class="space-y-4 text-center js-todo-list">
         <?php foreach ($todos as $todo) : ?>
-          <li class="flex items-center justify-center">
+          <li class="flex items-center justify-center js-todo" data-id="<?= $todo['id'] ?>">
             <?= $todo['text'] ?>
-            <form method="post" action="./update/index.php" class="inline">
-              <input type="hidden" name="toggle-id" value="<?= $todo['id'] ?>">
-              <button type="submit" class="ml-2 px-3 py-1 <?= $todo['completed'] ? 'bg-blue-500 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700' ?> text-white font-bold rounded">
-                <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
-              </button>
-            </form>
+            <button type="button" onclick="updateTodo(<?= $todo['id'] ?>)" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded js-complete-todo">
+              <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
+            </button>
             <a href="edit/index.php?id=<?= $todo['id'] ?>&text=<?= $todo['text'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
             <button type="button" onclick="deleteTodo(<?= $todo['id'] ?>, this.parentNode)" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
               Delete
@@ -71,7 +68,23 @@ $todos->execute();
 </body>
 
 <script>
-  const todoListElement = document.querySelector("#todo-list");
+  const addTodoElement = (text, id) => {
+    const template = document.querySelector('template').content.cloneNode(true);
+    template.querySelector('.js-todo-text').textContent = text;
+
+    // 編集用のリンクを設定
+    template.querySelector('.js-edit-link').href = `edit/index.php?id=${id}&text=${text}`;
+
+    // 削除ボタンの設定
+    const deleteButton = template.querySelector('.js-delete-todo');
+    deleteButton.setAttribute('data-id', id);
+    deleteButton.addEventListener('click', () => {
+      deleteTodo(id, deleteButton.parentNode);
+    });
+
+    // 元のリストに追加
+    document.querySelector('.js-todo-list').appendChild(template);
+  }
 
   async function createTodo() {
     const todoInput = document.getElementById('todo-text');
@@ -93,7 +106,39 @@ $todos->execute();
 
       const data = await response.json();
       addTodoElement(todoText, data.id);
+
       todoInput.value = '';
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  }
+
+  const updateTodoElement = (id, isCompleted) => {
+    const todoElement = document.querySelector(`.js-todo[data-id="${id}"]`);
+
+    if (todoElement) {
+      const completeButton = todoElement.querySelector('.js-complete-todo');
+      completeButton.textContent = isCompleted ? 'Undo' : 'Complete';
+    }
+  }
+
+  async function updateTodo(id) {
+    try {
+      const response = await fetch('./update/index.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `toggle-id=${id}`
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error('Error from server: ' + errorText);
+      }
+
+      const data = await response.json();
+      updateTodoElement(id, data.completed);
 
     } catch (error) {
       alert('Error: ' + error.message);
@@ -119,27 +164,6 @@ $todos->execute();
     } catch (error) {
       alert('Error: ' + error.message);
     }
-  }
-
-  // idはaddTodoElementを実行するときに渡す 渡すイメージはレスポンスからidを取得して渡す
-  // const data = response.json() でレスポンスをjsonに変換してからidを取得する
-  // data.id でidを取得できるので、addTodoElement(todoText, data.id) とする
-  const addTodoElement = (text, id) => {
-    const template = document.querySelector('template').content.cloneNode(true);
-    template.querySelector('.js-todo-text').textContent = text;
-
-    // 編集用のリンクを設定
-    template.querySelector('.js-edit-link').href = `edit/index.php?id=${id}&text=${text}`;
-
-    // 削除ボタンの設定
-    const deleteButton = template.querySelector('.js-delete-todo');
-    deleteButton.setAttribute('data-id', id);
-    deleteButton.addEventListener('click', () => {
-      deleteTodo(id, deleteButton.parentNode);
-    });
-
-    // 元のリストに追加
-    document.querySelector('.js-todo-list').appendChild(template);
   }
 </script>
 
