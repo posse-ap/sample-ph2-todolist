@@ -5,22 +5,23 @@ session_start();
 
 if (!isset($_SESSION['id'])) {
   header('Location: /auth/login.php');
-} else {
-  if (!$_GET['id']) {
+  exit;
+}
+
+if (!$_GET['id']) {
+  header('Location: ../index.php');
+  exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $text = trim($_POST['text']);
+  if ($text) {
+    $stmt = $dbh->prepare("UPDATE todos SET text = :text WHERE id = :id");
+    $stmt->bindValue(':text', $text);
+    $stmt->bindValue(':id', $_GET['id']);
+    $stmt->execute();
     header('Location: ../index.php');
     exit;
-  }
-
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $text = trim($_POST['text']);
-    if ($text) {
-      $stmt = $dbh->prepare("UPDATE todos SET text = :text WHERE id = :id");
-      $stmt->bindValue(':text', $text);
-      $stmt->bindValue(':id', $_GET['id']);
-      $stmt->execute();
-      header('Location: ../index.php');
-      exit;
-    }
   }
 }
 ?>

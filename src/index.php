@@ -26,12 +26,6 @@ if (!isset($_SESSION['id'])) {
   <?php include(dirname(__FILE__) . '/components/header.php'); ?>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
-      <!-- <form method="post" action="./create/index.php" class="mb-5 text-center">
-        <input name="todo-text" class="border p-2 w-full max-w-lg" type="text" placeholder="新しいToDoを入力してください" />
-        <button type="submit" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center">
-          追加
-        </button>
-      </form> -->
       <div class="mb-5 text-center">
         <input id="todo-text" name="todo-text" class="border p-2 w-full max-w-lg" type="text" placeholder="新しいToDoを入力してください" />
         <button type="button" onclick="createTodo()" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center">
