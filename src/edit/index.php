@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-  <?php include(dirname(__FILE__) . '/../components/header.php'); ?>
+  <?php include __DIR__ . '/../components/header.php'; ?>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
       <form method="post" class="mb-5 text-center">
