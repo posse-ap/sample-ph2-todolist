@@ -5,12 +5,13 @@ session_start();
 
 if (!isset($_SESSION['id'])) {
   header('Location: /auth/login.php');
-} else {
-  $userId = $_SESSION['id'];
-  $todos = $dbh->prepare("SELECT * FROM todos WHERE user_id = :user_id");
-  $todos->bindValue(':user_id', $userId);
-  $todos->execute();
+  exit;
 }
+
+$userId = $_SESSION['id'];
+$todos = $dbh->prepare("SELECT * FROM todos WHERE user_id = :user_id");
+$todos->bindValue(':user_id', $userId);
+$todos->execute();
 ?>
 <!DOCTYPE html>
 <html lang="en">
