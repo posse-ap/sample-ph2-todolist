@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h1 class="mb-4">新規登録</h1>
       <form method="post" action="" class="w-1/2 mb-5 text-center">
         <?php if ($message !== '') : ?>
-          <p style="color: red;"><?= htmlspecialchars($message) ?></p>
+          <p class="text-red-500"><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>
         <div class="mb-3 flex justify-center items-center gap-5">
           <label for="email">メール</label>
