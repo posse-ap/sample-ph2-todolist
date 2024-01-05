@@ -1,5 +1,12 @@
 <?php
-require '../dbconnect.php';
+require __DIR__ . '/../dbconnect.php';
+
+session_start();
+
+if (!isset($_SESSION['id'])) {
+  header('Location: /auth/login.php');
+  exit;
+}
 
 if (!$_GET['id']) {
   header('Location: ../index.php');
@@ -10,7 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $text = trim($_POST['text']);
   if ($text) {
     $stmt = $dbh->prepare("UPDATE todos SET text = :text WHERE id = :id");
-    $stmt->execute([':text' => $text, ':id' => $_GET['id']]);
+    $stmt->bindValue(':text', $text);
+    $stmt->bindValue(':id', $_GET['id']);
+    $stmt->execute();
     header('Location: ../index.php');
     exit;
   }
@@ -28,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
+  <?php include __DIR__ . '/../components/header.php'; ?>
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
       <form method="post" class="mb-5 text-center">
