@@ -3,7 +3,7 @@
   <h1><?= $_SESSION['email']; ?>のTo-Do List</h1>
   <div>
     <form method="POST" action="/auth/logout.php">
-      <input type="submit" value="ログアウト" class="cursor-pointer"/>
+      <button type="submit" class="cursor-pointer">ログアウト</button>
     </form>
   </div>
   <?php } else { ?>
