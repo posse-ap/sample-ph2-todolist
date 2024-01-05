@@ -1,8 +1,3 @@
-FROM golang:1.15 AS builder
-RUN go get -d -v github.com/mailhog/mhsendmail \
-  && cd /go/src/github.com/mailhog/mhsendmail/ \
-  && GOOS=linux GOARCH=arm64 go build -o mhsendmail .
-
 FROM php:fpm-buster
 # タイムゾーン(東京)
 ENV TZ Asia/Tokyo
