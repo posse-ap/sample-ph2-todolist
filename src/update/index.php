@@ -26,6 +26,5 @@ try {
   echo json_encode(['completed' => $result['completed']]);
 } catch (PDOException $e) {
   header('HTTP/1.1 500 Internal Server Error');
-  echo 'Database error: ' . $e->getMessage();
   exit;
 }

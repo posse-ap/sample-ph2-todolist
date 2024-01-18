@@ -20,6 +20,5 @@ try {
   $stmt->execute();
 } catch (PDOException $e) {
   header('HTTP/1.1 500 Internal Server Error');
-  echo 'Database error: ' . $e->getMessage();
   exit;
 }
