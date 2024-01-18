@@ -53,14 +53,11 @@ $todos->execute();
   <template>
     <li class="flex items-center justify-center">
       <span class="js-todo-text"></span>
-      <form method="post" action="./update/index.php" class="inline">
-        <input type="hidden" name="toggle-id" value="">
-        <button type="submit" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
-          Complete
-        </button>
-      </form>
+      <button type="button" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded js-complete-todo-template" data-id="">
+        Complete
+      </button>
       <a href="" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded js-edit-link">Edit</a>
-      <button type="button" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded js-delete-todo" data-id="">
+      <button type="button" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded js-delete-todo-template" data-id="">
         Delete
       </button>
     </li>
@@ -72,11 +69,18 @@ $todos->execute();
     const template = document.querySelector('template').content.cloneNode(true);
     template.querySelector('.js-todo-text').textContent = text;
 
+    // ステータス更新ボタンの設定
+    const completeButton = template.querySelector('.js-complete-todo-template');
+    completeButton.setAttribute('data-id', id);
+    completeButton.addEventListener('click', () => {
+      updateTodo(id);
+    });
+
     // 編集用のリンクを設定
     template.querySelector('.js-edit-link').href = `edit/index.php?id=${id}&text=${text}`;
 
     // 削除ボタンの設定
-    const deleteButton = template.querySelector('.js-delete-todo');
+    const deleteButton = template.querySelector('.js-delete-todo-template');
     deleteButton.setAttribute('data-id', id);
     deleteButton.addEventListener('click', () => {
       deleteTodo(id, deleteButton.parentNode);
