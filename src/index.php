@@ -69,24 +69,20 @@ $todos->execute();
     const template = document.querySelector('template').content.cloneNode(true);
     template.querySelector('.js-todo-text').textContent = text;
 
-    // ステータス更新ボタンの設定
     const completeButton = template.querySelector('.js-complete-todo-template');
     completeButton.setAttribute('data-id', id);
     completeButton.addEventListener('click', () => {
       updateTodo(id);
     });
 
-    // 編集用のリンクを設定
     template.querySelector('.js-edit-link').href = `edit/index.php?id=${id}&text=${text}`;
 
-    // 削除ボタンの設定
     const deleteButton = template.querySelector('.js-delete-todo-template');
     deleteButton.setAttribute('data-id', id);
     deleteButton.addEventListener('click', () => {
       deleteTodo(id, deleteButton.parentNode);
     });
 
-    // 元のリストに追加
     document.querySelector('.js-todo-list').appendChild(template);
   }
 
