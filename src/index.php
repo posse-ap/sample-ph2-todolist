@@ -29,8 +29,8 @@ $todos->execute();
   <div class="p-10">
     <div class="w-full flex justify-center items-center flex-col">
       <div class="mb-5 text-center">
-        <input id="todo-text" name="todo-text" class="border p-2 w-full max-w-lg" type="text" placeholder="新しいToDoを入力してください" />
-        <button type="button" onclick="createTodo()" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center">
+        <input name="todo-text" class="border p-2 w-full max-w-lg js-todo-text" type="text" placeholder="新しいToDoを入力してください" />
+        <button type="button" class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 text-center js-create-todo">
           追加
         </button>
       </div>
@@ -38,11 +38,11 @@ $todos->execute();
         <?php foreach ($todos as $todo) : ?>
           <li class="flex items-center justify-center js-todo" data-id="<?= $todo['id'] ?>">
             <?= $todo['text'] ?>
-            <button type="button" onclick="updateTodo(<?= $todo['id'] ?>)" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded js-complete-todo">
+            <button type="button" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded js-complete-todo">
               <?= $todo['completed'] ? 'Undo' : 'Complete' ?>
             </button>
             <a href="edit/index.php?id=<?= $todo['id'] ?>&text=<?= $todo['text'] ?>" class="ml-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold rounded">Edit</a>
-            <button type="button" onclick="deleteTodo(<?= $todo['id'] ?>, this.parentNode)" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded">
+            <button type="button" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded js-delete-todo">
               Delete
             </button>
           </li>
@@ -65,6 +65,23 @@ $todos->execute();
 </body>
 
 <script>
+  const completeButtons = document.querySelectorAll('.js-complete-todo');
+  completeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const todoId = button.parentNode.getAttribute('data-id');
+      updateTodo(todoId);
+    });
+  });
+
+  const deleteButtons = document.querySelectorAll('.js-delete-todo');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const todoId = button.parentNode.getAttribute('data-id');
+      const parentNode = button.parentNode;
+      deleteTodo(todoId, parentNode);
+    });
+  });
+
   const addTodoElement = (text, id) => {
     const template = document.querySelector('template').content.cloneNode(true);
     template.querySelector('.js-todo-text').textContent = text;
@@ -86,8 +103,10 @@ $todos->execute();
     document.querySelector('.js-todo-list').appendChild(template);
   }
 
+  document.querySelector('.js-create-todo').addEventListener('click', createTodo);
+
   async function createTodo() {
-    const todoInput = document.getElementById('todo-text');
+    const todoInput = document.querySelector('.js-todo-text');
     const todoText = todoInput.value;
 
     try {
