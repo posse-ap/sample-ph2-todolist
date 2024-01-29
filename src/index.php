@@ -65,6 +65,9 @@ $todos->execute();
 </body>
 
 <script>
+  // 追加処理、更新処理、削除処理を addEventListener で指定
+  document.querySelector('.js-create-todo').addEventListener('click', createTodo);
+
   const completeButtons = document.querySelectorAll('.js-complete-todo');
   completeButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -103,7 +106,6 @@ $todos->execute();
     document.querySelector('.js-todo-list').appendChild(template);
   }
 
-  document.querySelector('.js-create-todo').addEventListener('click', createTodo);
 
   async function createTodo() {
     const todoInput = document.querySelector('.js-todo-text');
