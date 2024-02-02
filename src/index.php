@@ -51,7 +51,7 @@ $todos->execute();
     </div>
   </div>
   <template>
-    <li class="flex items-center justify-center">
+    <li class="flex items-center justify-center js-todo">
       <span class="js-todo-text"></span>
       <button type="button" class="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded js-complete-todo-template" data-id="">
         Complete
